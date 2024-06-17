@@ -2,9 +2,11 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 
 import './HomePage.css';
-import { Link } from 'react-router-dom';
 import { UserCard } from '../../components/UserCard';
 import { PREFIX } from '../../helpers/API';
+import { useAppDispatch } from '../../redux/store';
+import { logout } from '../../redux/user.slice';
+import { useNavigate } from 'react-router-dom';
 
 export interface User {
   id: number;
@@ -21,6 +23,8 @@ export interface FavoriteUsers {
 export const HomePage: React.FC = () => {
   const [users, setUsers] = React.useState<User[]>([]);
   const [favoriteUsers, setFavoriteUsers] = React.useState<FavoriteUsers[]>([]);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -39,6 +43,12 @@ export const HomePage: React.FC = () => {
     }
   }, [favoriteUsers]);
 
+  const onClickLogout = () => {
+    dispatch(logout());
+    setFavoriteUsers([]);
+    navigate('/register');
+  }
+
   return (
     <div className="layout__home">
       <header className="home__header">
@@ -51,12 +61,12 @@ export const HomePage: React.FC = () => {
               даже самых сложных ситуаций.
             </p>
           </div>
-          <Link to={'/register'} className="header__link">
-            <button className="home__logout">Выход</button>
-            <button className="home__logout-mobile">
+          <div className="header__link">
+            <button onClick={onClickLogout} className="home__logout">Выход</button>
+            <button onClick={onClickLogout} className="home__logout-mobile">
               <img src="/svg/exit.svg" alt="Exit icon" />
             </button>
-          </Link>
+          </div>
         </div>
       </header>
       <main className="home__main">

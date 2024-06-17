@@ -49,6 +49,7 @@
 }
 
 .user-page__header-data {
+  width: fit-content;
   display: flex;
   flex-direction: row-reverse;
   justify-content: flex-end;
@@ -151,6 +152,7 @@
 
 @media (max-width: 971px) {
   .user-page__header-data {
+    width: 100%;
     flex-direction: column;
     align-items: center;
     position: static;
