@@ -38,6 +38,7 @@ export const AuthPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       dispatch(clearRegisterError());
       dispatch(registerUser({ email: data.email, password: data.password }));
       reset();
