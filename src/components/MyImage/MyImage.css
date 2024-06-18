@@ -1,0 +1,26 @@
+.user-page__image-wrapper {
+  border-radius: 50%;
+  overflow: hidden;
+  width: 187px;
+  aspect-ratio: 1;
+  background: #34175a;
+}
+
+.user-page__image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image__skeleton {
+  background: #431e74;
+  color: var(--white);
+  text-align: center;
+  font-size: 22px;
+  width: 100%;
+  height: 100%;
+  margin: auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

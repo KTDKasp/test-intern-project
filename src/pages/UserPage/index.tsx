@@ -7,6 +7,7 @@ import { logout } from '../../redux/user.slice';
 import { clearFavorites } from '../../redux/favorites.slice';
 
 import './UserPage.css';
+import { MyImage } from '../../components/MyImage';
 
 export const UserPage: React.FC = () => {
   const data = useLoaderData() as { data: User };
@@ -54,9 +55,7 @@ export const UserPage: React.FC = () => {
                     </h2>
                     <p className="user-page__description">Партнер</p>
                   </div>
-                  <div className="user-page__image-wrapper">
-                    <img src={data.avatar} alt="User image" />
-                  </div>
+                  <MyImage src={data.avatar} alt='User image'/>
                 </div>
               </div>
             </header>
