@@ -1,28 +1,20 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-import './HomePage.css';
 import { UserCard } from '../../components/UserCard';
 import { PREFIX } from '../../helpers/API';
-import { useAppDispatch } from '../../redux/store';
+import { RootState, useAppDispatch } from '../../redux/store';
 import { logout } from '../../redux/user.slice';
-import { useNavigate } from 'react-router-dom';
+import { addToFavorite, clearFavorites } from '../../redux/favorites.slice';
+import { User } from '../../interfaces/user.interface';
 
-export interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  avatar: string;
-  email: string;
-}
-
-export interface FavoriteUsers {
-  userId: number;
-}
+import './HomePage.css';
 
 export const HomePage: React.FC = () => {
   const [users, setUsers] = React.useState<User[]>([]);
-  const [favoriteUsers, setFavoriteUsers] = React.useState<FavoriteUsers[]>([]);
+  const favoriteUsers = useSelector((state: RootState) => state.favorites.favoriteUsers);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -34,18 +26,9 @@ export const HomePage: React.FC = () => {
     fetchUsers();
   }, []);
 
-  const addToFavorite = React.useCallback((id: number) => {
-    const isUserFavorite = favoriteUsers.find(obj => obj.userId === id);
-    if (isUserFavorite) {
-      setFavoriteUsers(favoriteUsers.filter(obj => obj.userId !== id));
-    } else {
-      setFavoriteUsers([...favoriteUsers, { userId: id }]);
-    }
-  }, [favoriteUsers]);
-
   const onClickLogout = () => {
     dispatch(logout());
-    setFavoriteUsers([]);
+    dispatch(clearFavorites());
     navigate('/register');
   }
 
@@ -61,9 +44,9 @@ export const HomePage: React.FC = () => {
               даже самых сложных ситуаций.
             </p>
           </div>
-          <div className="header__link">
-            <button onClick={onClickLogout} className="home__logout">Выход</button>
-            <button onClick={onClickLogout} className="home__logout-mobile">
+          <div onClick={onClickLogout} className="header__link">
+            <button className="home__logout">Выход</button>
+            <button className="home__logout-mobile">
               <img src="/svg/exit.svg" alt="Exit icon" />
             </button>
           </div>
@@ -79,7 +62,7 @@ export const HomePage: React.FC = () => {
               first_name={user.first_name}
               avatar={user.avatar}
               isFavorite={favoriteUsers.some(obj => obj.userId === user.id)}
-              onAddToFavorite={addToFavorite}
+              onAddToFavorite={() => dispatch(addToFavorite({ userId: user.id}))}
             />
           ))}
         </div>

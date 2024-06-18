@@ -1,11 +1,23 @@
 import React, { Suspense } from 'react';
-import { Await, Link, useLoaderData } from 'react-router-dom';
-import { User } from '../HomePage';
+import { Await, Link, useLoaderData, useNavigate } from 'react-router-dom';
+
+import { User } from '../../interfaces/user.interface';
+import { useAppDispatch } from '../../redux/store';
+import { logout } from '../../redux/user.slice';
+import { clearFavorites } from '../../redux/favorites.slice';
 
 import './UserPage.css';
 
 export const UserPage: React.FC = () => {
   const data = useLoaderData() as { data: User };
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const onClickLogout = () => {
+    dispatch(logout());
+    dispatch(clearFavorites())
+    navigate('/register');
+  }
   return (
     <Suspense
       fallback={
@@ -28,12 +40,12 @@ export const UserPage: React.FC = () => {
                       <img src="/svg/arrow-back.svg" alt="Arrow icon" />
                     </button>
                   </Link>
-                  <Link to={'/register'} className="header__link">
+                  <div onClick={onClickLogout} className="header__link">
                     <button className="home__logout">Выход</button>
                     <button className="home__logout-mobile">
                       <img src="/svg/exit.svg" alt="Exit icon" />
                     </button>
-                  </Link>
+                  </div>
                 </div>
                 <div className="user-page__header-data">
                   <div className="user-page__name-wrapper">

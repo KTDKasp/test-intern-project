@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { RootState, useAppDispatch } from '../../redux/store';
 import { clearRegisterError, registerUser } from '../../redux/user.slice';
 import './AuthPage.css';
-import { MyInput } from '../../components/PasswordInput';
+import { PasswordInput } from '../../components/PasswordInput';
 
 type FormFields = {
   email: string;
@@ -30,7 +30,7 @@ export const AuthPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  React.useEffect(() => {    
+  React.useEffect(() => {
     if (jwt) {
       navigate('/');
     }
@@ -38,7 +38,6 @@ export const AuthPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
-      console.log(data);
       dispatch(clearRegisterError());
       dispatch(registerUser({ email: data.email, password: data.password }));
       reset();
@@ -46,7 +45,7 @@ export const AuthPage: React.FC = () => {
       setError('root', { message: 'Произошла ошибка при регистрации' });
     }
   };
-  
+
   return (
     <div className="auth-page">
       <div className="auth-page__wrapper">
@@ -57,8 +56,11 @@ export const AuthPage: React.FC = () => {
           <h2 className="auth-page__title">Регистрация</h2>
           <div className="auth-page__inputs">
             <div className="input-block">
-              <label className="label" htmlFor="name">Имя</label>
-              <input className={`${errors.name ? 'input input__error' : 'input'}`}
+              <label className="label" htmlFor="name">
+                Имя
+              </label>
+              <input
+                className={`${errors.name ? 'input input__error' : 'input'}`}
                 {...register('name', {
                   required: 'Поле Имя обязательно к заполнению',
                 })}
@@ -71,8 +73,11 @@ export const AuthPage: React.FC = () => {
               )}
             </div>
             <div className="input-block">
-              <label className="label" htmlFor="email">Электронная почта</label>
-              <input className={`${errors.email ? 'input input__error' : 'input'}`}
+              <label className="label" htmlFor="email">
+                Электронная почта
+              </label>
+              <input
+                className={`${errors.email ? 'input input__error' : 'input'}`}
                 {...register('email', {
                   required: 'Поле Email обязательно к заполнению',
                   pattern: {
@@ -89,20 +94,10 @@ export const AuthPage: React.FC = () => {
               )}
             </div>
             <div className="input-block">
-              {/* <label className="label" htmlFor="password">Пароль</label>
-              <input className={`${errors.password ? 'input input__error' : 'input'}`}
-                {...register('password', {
-                  required: 'Поле Пароль обязательно к заполнению',
-                  minLength: {
-                    value: 6,
-                    message: 'Пароль должен состоят из шести символов',
-                  },
-                })}
-                type="password"
-                id="password"
-                placeholder="******"
-              /> */}
-              <MyInput forId='password' label='Пароль' errorClassName={errors.password} 
+              <PasswordInput
+                forId="password"
+                label="Пароль"
+                errorClassName={errors.password}
                 {...register('password', {
                   required: 'Поле Пароль обязательно к заполнению',
                   minLength: {
@@ -116,27 +111,23 @@ export const AuthPage: React.FC = () => {
               )}
             </div>
 
-            {/* #TODO: Обернуть подтверждение пароля кастомным инпутом MyInput */}
             <div className="input-block">
-              <label className="label" htmlFor="password-confirm">Подтвердите пароль</label>
-              <div className="input-wrapper">
-              <input className={`${errors.passwordConfirm ? 'input input__error' : 'input'}`}
+              <PasswordInput
+                forId="password-confirm"
+                label="Подтвердите пароль"
+                errorClassName={errors.passwordConfirm}
                 {...register('passwordConfirm', {
                   required: 'Введите ваш пароль еще раз',
                   validate: (value) =>
                     value === getValues('password') ||
                     'Пароли должны совпадать',
                 })}
-                type="password"
-                id="password-confirm"
-                placeholder="******"
               />
               {errors.passwordConfirm && (
                 <p className="input__error-text">
                   {errors.passwordConfirm.message}
                 </p>
               )}
-              </div>
             </div>
           </div>
           <button

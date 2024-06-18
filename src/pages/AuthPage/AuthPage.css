@@ -84,21 +84,3 @@
   padding: 16px 8px 16px 16px;
   font-size: 14px;
 }
-
-.input.password-input {
-  padding: 16px 40px 16px 16px;
-}
-
-.password-input__button {
-  padding: 0;
-  position: absolute;
-  right: 8px;
-  top: 12px;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  background-color: transparent;
-  border: none;
-}
