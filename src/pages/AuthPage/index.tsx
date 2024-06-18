@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { RootState, useAppDispatch } from '../../redux/store';
 import { clearRegisterError, registerUser } from '../../redux/user.slice';
 import './AuthPage.css';
+import { MyInput } from '../../components/PasswordInput';
 
 type FormFields = {
   email: string;
@@ -45,7 +46,7 @@ export const AuthPage: React.FC = () => {
       setError('root', { message: 'Произошла ошибка при регистрации' });
     }
   };
-  // #TODO: Add validation
+  
   return (
     <div className="auth-page">
       <div className="auth-page__wrapper">
@@ -88,7 +89,7 @@ export const AuthPage: React.FC = () => {
               )}
             </div>
             <div className="input-block">
-              <label className="label" htmlFor="password">Пароль</label>
+              {/* <label className="label" htmlFor="password">Пароль</label>
               <input className={`${errors.password ? 'input input__error' : 'input'}`}
                 {...register('password', {
                   required: 'Поле Пароль обязательно к заполнению',
@@ -100,13 +101,24 @@ export const AuthPage: React.FC = () => {
                 type="password"
                 id="password"
                 placeholder="******"
+              /> */}
+              <MyInput forId='password' label='Пароль' errorClassName={errors.password} 
+                {...register('password', {
+                  required: 'Поле Пароль обязательно к заполнению',
+                  minLength: {
+                    value: 6,
+                    message: 'Пароль должен состоят из шести символов',
+                  },
+                })}
               />
               {errors.password && (
                 <p className="input__error-text">{errors.password.message}</p>
               )}
             </div>
+
+            {/* #TODO: Обернуть подтверждение пароля кастомным инпутом MyInput */}
             <div className="input-block">
-              <label className="label" htmlFor="password-confirm">Имя</label>
+              <label className="label" htmlFor="password-confirm">Подтвердите пароль</label>
               <div className="input-wrapper">
               <input className={`${errors.passwordConfirm ? 'input input__error' : 'input'}`}
                 {...register('passwordConfirm', {
