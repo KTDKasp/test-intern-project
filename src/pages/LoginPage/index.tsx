@@ -1,27 +1,24 @@
 import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import { RootState, useAppDispatch } from '../../redux/store';
-import { clearRegisterError, registerUser } from '../../redux/user.slice';
-import './AuthPage.css';
+import { clearRegisterError, loginUser } from '../../redux/user.slice';
+import './LoginPage.css';
 import { PasswordInput } from '../../components/PasswordInput';
 
 type FormFields = {
   email: string;
-  name: string;
   password: string;
-  passwordConfirm: string;
 };
 
-export const AuthPage: React.FC = () => {
+export const LoginPage: React.FC = () => {
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
     setError,
-    getValues,
     reset,
   } = useForm<FormFields>();
   const { jwt, registerErrorState } = useSelector(
@@ -40,7 +37,7 @@ export const AuthPage: React.FC = () => {
     try {
       await new Promise((resolve) => setTimeout(resolve, 1000));
       dispatch(clearRegisterError());
-      dispatch(registerUser({ email: data.email, password: data.password }));
+      dispatch(loginUser({ email: data.email, password: data.password }));
       reset();
     } catch (error) {
       setError('root', { message: 'Произошла ошибка при регистрации' });
@@ -56,23 +53,6 @@ export const AuthPage: React.FC = () => {
         <form onSubmit={handleSubmit(onSubmit)} className="auth-page__form">
           <h2 className="auth-page__title">Регистрация</h2>
           <div className="auth-page__inputs">
-            <div className="input-block">
-              <label className="label" htmlFor="name">
-                Имя
-              </label>
-              <input
-                className={`input ${errors.name ? 'input__error' : ''}`}
-                {...register('name', {
-                  required: 'Поле Имя обязательно к заполнению',
-                })}
-                type="text"
-                id="name"
-                placeholder="Иван"
-              />
-              {errors.name && (
-                <p className="input__error-text">{errors.name.message}</p>
-              )}
-            </div>
             <div className="input-block">
               <label className="label" htmlFor="email">
                 Электронная почта
@@ -112,36 +92,25 @@ export const AuthPage: React.FC = () => {
               )}
             </div>
 
-            <div className="input-block">
-              <PasswordInput
-                forId="password-confirm"
-                label="Подтвердите пароль"
-                errorClassName={errors.passwordConfirm}
-                {...register('passwordConfirm', {
-                  required: 'Введите ваш пароль еще раз',
-                  validate: (value) =>
-                    value === getValues('password') ||
-                    'Пароли должны совпадать',
-                })}
-              />
-              {errors.passwordConfirm && (
-                <p className="input__error-text">
-                  {errors.passwordConfirm.message}
-                </p>
-              )}
-            </div>
+            
           </div>
           <button
             disabled={isSubmitting}
             type="submit"
             className="auth-page__button"
           >
-            {isSubmitting ? 'Загрузка...' : 'Зарегистрироваться'}
+            {isSubmitting ? 'Загрузка...' : 'Войти'}
           </button>
           {errors.root && (
             <p className="input__error-text">{errors.root.message}</p>
           )}
         </form>
+        <div className="sign-in__ask">
+          <p>Нет аккаунта?</p>
+          <Link to="/accounts/register" className="sign-in__link">
+            Зарегистрироваться
+          </Link>
+        </div>
       </div>
     </div>
   );

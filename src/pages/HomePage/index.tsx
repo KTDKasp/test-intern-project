@@ -11,16 +11,15 @@ import { addToFavorite, clearFavorites } from '../../redux/favorites.slice';
 import { User } from '../../interfaces/user.interface';
 
 import './HomePage.css';
+import { MetaData } from '../../interfaces/metaData.interface';
 
-export interface ReqresResponseData {
-  page: number;
-  per_page: number;
-  total_pages: number;
-  total: number;
-  data: User[];
+export interface MokkyResponseData {
+  meta: MetaData;
+  items: User[];
 }
 
 export const HomePage: React.FC = () => {
+  const jwt = useSelector((state: RootState) => state.user.jwt);
   const [users, setUsers] = React.useState<User[]>([]);
   const favoriteUsers = useSelector(
     (state: RootState) => state.favorites.favoriteUsers
@@ -36,11 +35,16 @@ export const HomePage: React.FC = () => {
     setIsLoading(true);
     const fetchUsersData = async () => {
       try {
-        const { data } = await axios.get<ReqresResponseData>(
-          `${PREFIX}/users?page=${page}&per_page=${per_page}`
+        const { data } = await axios.get<MokkyResponseData>(
+          `${PREFIX}/items?page=${page}&limit=${per_page}`,
+          {
+            headers: {
+              Authorization: `Bearer ${jwt}`,
+            },
+          }
         );
-        totalPagesRef.current = data.total_pages;
-        setUsers(data.data);
+        totalPagesRef.current = data.meta.total_pages;
+        setUsers(data.items);
       } catch (error) {
         if (error instanceof AxiosError) {
           console.error(error);
@@ -50,12 +54,12 @@ export const HomePage: React.FC = () => {
       }
     };
     fetchUsersData();
-  }, [page]);
+  }, [page, jwt]);
 
   const onClickLogout = () => {
     dispatch(logout());
     dispatch(clearFavorites());
-    navigate('/register');
+    navigate('/accounts/auth');
   };
 
   return (

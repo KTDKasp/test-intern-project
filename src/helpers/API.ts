@@ -1,1 +1,1 @@
-export const PREFIX = "https://reqres.in/api";
+export const PREFIX = "https://064b6f51b41b3561.mokky.dev";

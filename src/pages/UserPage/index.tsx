@@ -13,11 +13,13 @@ export const UserPage: React.FC = () => {
   const data = useLoaderData() as { data: User };
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  console.log(data);
+  
 
   const onClickLogout = () => {
     dispatch(logout());
     dispatch(clearFavorites())
-    navigate('/register');
+    navigate('/accounts/auth');
   }
   return (
     <Suspense
@@ -112,7 +114,7 @@ export const UserPage: React.FC = () => {
               </div>
             </div>
           </div>
-        )}
+         )} 
       </Await>
     </Suspense>
   );

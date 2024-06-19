@@ -21,7 +21,7 @@ export const UserCard: React.FC<UserCardProps> = React.memo(function Usercard({
   }, [id, onAddToFavorite, isFavoriteState]);
   return (
     <div className="user__card">
-      <Link to={`/user/${id}`} className="user__link">
+      <Link to={`/item/${id}`} className="user__link">
         <div className="image-wrapper">
           <img className="user__image" src={avatar} alt="User Image" />
         </div>

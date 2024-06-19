@@ -6,7 +6,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 export const RequireAuth: React.FC = () => {
   const jwt = useSelector((state: RootState) => state.user.jwt);
   if (!jwt) {
-    return <Navigate to='/register' replace />
+    return <Navigate to='/accounts/auth' replace />
   }
   return (<Outlet />);
 }

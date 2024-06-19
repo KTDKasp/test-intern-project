@@ -41,7 +41,7 @@ export const PasswordInput: React.FC<CustomInput> = React.forwardRef(
             onClick={(e) => toggleShowPassword(e)}
             className="password-input__button"
           >
-            <img src={showPassword ? "./svg/visibility.svg" : "./svg/visibility-off.svg"} alt="Visibility Icon" />
+            <img src={showPassword ? "/svg/visibility.svg" : "/svg/visibility-off.svg"} alt="Visibility Icon" />
           </button>
         </div>
       </>

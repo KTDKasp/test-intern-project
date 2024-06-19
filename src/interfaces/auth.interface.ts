@@ -1,4 +1,6 @@
+import { UserRegister } from "./userRegister.interface"
+
 export interface AuthResponse {
   token: string
-  id: number
+  data: UserRegister;
 }
