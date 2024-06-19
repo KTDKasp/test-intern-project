@@ -80,7 +80,7 @@ export const HomePage: React.FC = () => {
       </header>
       <main className="home__main">
         {isLoading ? (
-          <div>Идет загрузка...</div>
+          <div className="loading__page">Идет загрузка...</div>
         ) : (
           <div className="home__content">
             {users.map((user: User) => (
@@ -105,7 +105,7 @@ export const HomePage: React.FC = () => {
               onClick={() => setPage(i + 1)}
               key={i}
             >
-              {i + 1}
+              <span>{i + 1}</span>
             </li>
           ))}
         </ul>
