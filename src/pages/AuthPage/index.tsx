@@ -61,7 +61,7 @@ export const AuthPage: React.FC = () => {
                 Имя
               </label>
               <input
-                className={`${errors.name ? 'input input__error' : 'input'}`}
+                className={`input ${errors.name ? 'input__error' : ''}`}
                 {...register('name', {
                   required: 'Поле Имя обязательно к заполнению',
                 })}
@@ -78,7 +78,7 @@ export const AuthPage: React.FC = () => {
                 Электронная почта
               </label>
               <input
-                className={`${errors.email ? 'input input__error' : 'input'}`}
+                className={`input ${errors.email ? 'input__error' : ''}`}
                 {...register('email', {
                   required: 'Поле Email обязательно к заполнению',
                   pattern: {

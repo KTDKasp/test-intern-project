@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
+import axios, { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -12,25 +12,51 @@ import { User } from '../../interfaces/user.interface';
 
 import './HomePage.css';
 
+export interface ReqresResponseData {
+  page: number;
+  per_page: number;
+  total_pages: number;
+  total: number;
+  data: User[];
+}
+
 export const HomePage: React.FC = () => {
   const [users, setUsers] = React.useState<User[]>([]);
-  const favoriteUsers = useSelector((state: RootState) => state.favorites.favoriteUsers);
+  const favoriteUsers = useSelector(
+    (state: RootState) => state.favorites.favoriteUsers
+  );
+  const [page, setPage] = React.useState<number>(1);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const per_page = 4;
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const totalPagesRef = React.useRef(0);
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const { data } = await axios.get(`${PREFIX}/users`);
-      setUsers(data.data);
+  React.useEffect(() => {
+    setIsLoading(true);
+    const fetchUsersData = async () => {
+      try {
+        const { data } = await axios.get<ReqresResponseData>(
+          `${PREFIX}/users?page=${page}&per_page=${per_page}`
+        );
+        totalPagesRef.current = data.total_pages;
+        setUsers(data.data);
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          console.error(error);
+        }
+      } finally {
+        setIsLoading(false);
+      }
     };
-    fetchUsers();
-  }, []);
+    fetchUsersData();
+  }, [page]);
 
   const onClickLogout = () => {
     dispatch(logout());
     dispatch(clearFavorites());
     navigate('/register');
-  }
+  };
 
   return (
     <div className="layout__home">
@@ -53,23 +79,36 @@ export const HomePage: React.FC = () => {
         </div>
       </header>
       <main className="home__main">
-        <div className="home__content">
-          {users.map((user: User) => (
-            <UserCard
-              key={user.id}
-              id={user.id}
-              last_name={user.last_name}
-              first_name={user.first_name}
-              avatar={user.avatar}
-              isFavorite={favoriteUsers.some(obj => obj.userId === user.id)}
-              onAddToFavorite={() => dispatch(addToFavorite({ userId: user.id}))}
-            />
+        {isLoading ? (
+          <div>Идет загрузка...</div>
+        ) : (
+          <div className="home__content">
+            {users.map((user: User) => (
+              <UserCard
+                key={user.id}
+                id={user.id}
+                last_name={user.last_name}
+                first_name={user.first_name}
+                avatar={user.avatar}
+                isFavorite={favoriteUsers.some((obj) => obj.userId === user.id)}
+                onAddToFavorite={() =>
+                  dispatch(addToFavorite({ userId: user.id }))
+                }
+              />
+            ))}
+          </div>
+        )}
+        <ul className="pagination">
+          {[...Array(totalPagesRef.current)].map((_, i) => (
+            <li
+              className={`pagination__item ${page === i + 1 ? 'active' : ''}`}
+              onClick={() => setPage(i + 1)}
+              key={i}
+            >
+              {i + 1}
+            </li>
           ))}
-        </div>
-        <button className="show__content">
-          <span>Показать еще</span>
-          <img src="/svg/arrow-down.svg" alt="Arrow icon" />
-        </button>
+        </ul>
       </main>
     </div>
   );

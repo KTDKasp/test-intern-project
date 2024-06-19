@@ -29,7 +29,7 @@ export const PasswordInput: React.FC<CustomInput> = React.forwardRef(
         </label>
         <div className="input-wrapper">
           <input
-            className={`${errorClassName ? 'input password-input input__error' : 'input password-input'}`}
+            className={`input password-input ${errorClassName ? 'input__error' : ''}`}
             {...rest}
             type={showPassword ? 'text' : 'password'}
             id={forId}
