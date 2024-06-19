@@ -12,9 +12,7 @@ import { MyImage } from '../../components/MyImage';
 export const UserPage: React.FC = () => {
   const data = useLoaderData() as { data: User };
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  console.log(data);
-  
+  const navigate = useNavigate();  
 
   const onClickLogout = () => {
     dispatch(logout());

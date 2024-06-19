@@ -13,13 +13,13 @@ export interface UserPersistentState {
 export interface UserState {
   jwt: string | null;
   registerErrorState?: string;
+  loginErrorState?: string;
 }
 
 const initialState: UserState = {
   jwt: loadState<UserPersistentState>(JWT_STATE)?.jwt ?? null,
 };
 
-// # TODO: Изменить API для регистрации Пользователя
 export const registerUser = createAsyncThunk(
   'user/register',
   async (params: { email: string; password: string }) => {
@@ -40,11 +40,7 @@ export const registerUser = createAsyncThunk(
       return data;
     } catch (error) {
       if (error instanceof AxiosError) {
-        // return {
-        //   id: 1,
-        //   token: "some-random-token"
-        // }
-        return error.response?.data;
+        throw new Error(error.response?.data.message);
       }
     }
   }
@@ -69,10 +65,8 @@ export const loginUser = createAsyncThunk(
       );
       return data;
     } catch (error) {
-      if (error instanceof AxiosError) {
-        console.log(error.response);
-        
-        return error.response?.data;
+      if (error instanceof AxiosError) {        
+        throw new Error(error.response?.data.message);
       }
     }
   }
@@ -88,6 +82,9 @@ export const userSlice = createSlice({
     clearRegisterError: (state) => {
       state.registerErrorState = undefined;
     },
+    clearLoginError: (state) => {
+      state.loginErrorState = undefined;
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(registerUser.fulfilled, (state, action) => {
@@ -105,13 +102,11 @@ export const userSlice = createSlice({
       }
       state.jwt = action.payload.token;
     });
-    builder.addCase(loginUser.rejected, (state, action) => {
-      console.log(action.error);
-      
-      state.registerErrorState = action.error.message;
+    builder.addCase(loginUser.rejected, (state, action) => {      
+      state.loginErrorState = action.error.message;
     })
   },
 });
 
-export const { logout, clearRegisterError } = userSlice.actions;
+export const { logout, clearRegisterError, clearLoginError } = userSlice.actions;
 export default userSlice.reducer;

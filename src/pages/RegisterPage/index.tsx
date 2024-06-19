@@ -38,8 +38,8 @@ export const RegisterPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
       dispatch(clearRegisterError());
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       dispatch(registerUser({ email: data.email, password: data.password }));
       reset();
     } catch (error) {
@@ -51,7 +51,7 @@ export const RegisterPage: React.FC = () => {
     <div className="auth-page">
       <div className="auth-page__wrapper">
         {registerErrorState && (
-          <div className="auth-page__error">{registerErrorState}</div>
+          <div className="auth-page__error">{"Данная почта уже зарегистрирована"}</div>
         )}
         <form onSubmit={handleSubmit(onSubmit)} className="auth-page__form">
           <h2 className="auth-page__title">Регистрация</h2>

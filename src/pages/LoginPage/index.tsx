@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { RootState, useAppDispatch } from '../../redux/store';
-import { clearRegisterError, loginUser } from '../../redux/user.slice';
+import { clearLoginError, loginUser } from '../../redux/user.slice';
 import './LoginPage.css';
 import { PasswordInput } from '../../components/PasswordInput';
 
@@ -21,7 +21,7 @@ export const LoginPage: React.FC = () => {
     setError,
     reset,
   } = useForm<FormFields>();
-  const { jwt, registerErrorState } = useSelector(
+  const { jwt, loginErrorState } = useSelector(
     (state: RootState) => state.user
   );
   const dispatch = useAppDispatch();
@@ -35,8 +35,8 @@ export const LoginPage: React.FC = () => {
 
   const onSubmit: SubmitHandler<FormFields> = async (data) => {
     try {
+      dispatch(clearLoginError());
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      dispatch(clearRegisterError());
       dispatch(loginUser({ email: data.email, password: data.password }));
       reset();
     } catch (error) {
@@ -47,8 +47,8 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="auth-page">
       <div className="auth-page__wrapper">
-        {registerErrorState && (
-          <div className="auth-page__error">{registerErrorState}</div>
+        {loginErrorState && (
+          <div className="auth-page__error">{"Некорректная почта или пароль"}</div>
         )}
         <form onSubmit={handleSubmit(onSubmit)} className="auth-page__form">
           <h2 className="auth-page__title">Регистрация</h2>
