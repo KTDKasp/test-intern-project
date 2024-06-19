@@ -48,10 +48,12 @@ export const LoginPage: React.FC = () => {
     <div className="auth-page">
       <div className="auth-page__wrapper">
         {loginErrorState && (
-          <div className="auth-page__error">{"Некорректная почта или пароль"}</div>
+          <div className="auth-page__error">
+            {'Некорректная почта или пароль'}
+          </div>
         )}
         <form onSubmit={handleSubmit(onSubmit)} className="auth-page__form">
-          <h2 className="auth-page__title">Регистрация</h2>
+          <h2 className="auth-page__title">Вход</h2>
           <div className="auth-page__inputs">
             <div className="input-block">
               <label className="label" htmlFor="email">
@@ -91,8 +93,6 @@ export const LoginPage: React.FC = () => {
                 <p className="input__error-text">{errors.password.message}</p>
               )}
             </div>
-
-            
           </div>
           <button
             disabled={isSubmitting}
@@ -107,7 +107,11 @@ export const LoginPage: React.FC = () => {
         </form>
         <div className="sign-in__ask">
           <p>Нет аккаунта?</p>
-          <Link to="/accounts/register" className="sign-in__link">
+          <Link
+            onClick={() => dispatch(clearLoginError())}
+            to="/accounts/register"
+            className="sign-in__link"
+          >
             Зарегистрироваться
           </Link>
         </div>

@@ -51,7 +51,9 @@ export const RegisterPage: React.FC = () => {
     <div className="auth-page">
       <div className="auth-page__wrapper">
         {registerErrorState && (
-          <div className="auth-page__error">{"Данная почта уже зарегистрирована"}</div>
+          <div className="auth-page__error">
+            {'Данная почта уже зарегистрирована'}
+          </div>
         )}
         <form onSubmit={handleSubmit(onSubmit)} className="auth-page__form">
           <h2 className="auth-page__title">Регистрация</h2>
@@ -144,7 +146,11 @@ export const RegisterPage: React.FC = () => {
         </form>
         <div className="sign-in__ask">
           <p>Уже зарегистрированы?</p>
-          <Link to="/accounts/auth" className="sign-in__link">
+          <Link
+            onClick={() => dispatch(clearRegisterError())}
+            to="/accounts/auth"
+            className="sign-in__link"
+          >
             Войти
           </Link>
         </div>
